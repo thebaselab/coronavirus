@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Coronavirus Dashboard by thebaselab</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Maps, cases and other statistics of the COVID-19 coronavirus."
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="mainTheme.css"
+    />
+    <script src="main.js?version=3"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .collapsible {
+        display: none;
+      }
+
+      .category {
+        line-height: 2em;
+        display: inline;
+      }
+
+      .darkTwitter {
+        display: none;
+      }
+
+      .lightTwitter {
+        display: block;
+      }
+
+      .col-xs-6 {
+        font-size: 48px;
+        border-radius: 16px;
+        padding: 2%;
+        margin-bottom: 2%;
+        background-color: #f7f7f7;
+        width: 270px;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .darkTwitter {
+          display: block;
+        }
+
+        .lightTwitter {
+          display: none;
+        }
+
+        .col-xs-6,
+        .card {
+          background-color: #323232;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-end topbar">
+        <div>
+          <h2>COVID-19</h2>
+        </div>
+        <div class="text-right">
+          <a
+            href="https://twitter.com/thebaselab?ref_src=twsrc%5Etfw"
+            class="twitter-follow-button"
+            data-show-count="false"
+          ></a>
+          <script
+            async
+            src="https://platform.twitter.com/widgets.js"
+            charset="utf-8"
+          ></script>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between align-items-end topbar">
+        <div>
+          <h5>
+            Coronavirus Dashboard by
+            <a href="https://thebaselab.com">thebaselab</a>
+          </h5>
+        </div>
+        <div class="text-right"></div>
+      </div>
+
+      <div class="span11" style="overflow-x: auto; overflow-y: hidden">
+        <div class="row-fluid" id="ticker_tape"></div>
+      </div>
+
+      <div class="row">
+        <div class="col-4 text-center">
+          <h1 id="summarised.cases">0</h1>
+          <p id="summarised.todayCases">Total Cases</p>
+        </div>
+        <div class="col-4 text-center">
+          <h1 id="summarised.deaths">0</h1>
+          <p id="summarised.todayDeaths">Deaths</p>
+        </div>
+        <div class="col-4 text-center">
+          <h1 id="summarised.recovered">0</h1>
+          <p id="summarised.todayRecovered">Recovered</p>
+        </div>
+      </div>
+
+      <div id="regions_div"></div>
+
+      <h5 class="text-center" style="color: gray">
+        Last updated: <span id="last.updated"></span>
+      </h5>
+
+      <div class="row" style="overflow-y: hidden">
+        <div class="col-lg-12" id="lightTwitter">
+          <div
+            class="btn-group btn-group-toggle float-right country_button_light"
+            data-toggle="buttons"
+          >
+            <label class="btn btn-light btn-sm active">
+              <input
+                type="radio"
+                name="options"
+                id="option2"
+                autocomplete="off"
+                onchange="drawWorldMap(mapDataCache);"
+                checked
+              />
+
+              🌎
+            </label>
+            <!-- <label class="btn btn-light btn-sm">
+              <input
+                type="radio"
+                name="options"
+                id="option3"
+                autocomplete="off"
+              /> -->
+
+              🇪🇺
+            </label>
+            <label class="btn btn-light btn-sm">
+              <input
+                type="radio"
+                name="options"
+                id="option1"
+                autocomplete="off"
+                onchange="fetchAndDrawUSMap();"
+              />
+
+              🇺🇸
+            </label>
+          </div>
+        </div>
+        <div class="col-lg-12" id="darkTwitter">
+          <div
+            class="btn-group btn-group-toggle float-right country_button_dark"
+            data-toggle="buttons"
+          >
+            <label class="btn btn-dark btn-sm active">
+              <input
+                type="radio"
+                name="options"
+                id="option5"
+                autocomplete="off"
+                onchange="drawWorldMap(mapDataCache);"
+                checked
+              />
+
+              🌎
+            </label>
+            <!-- <label class="btn btn-dark btn-sm">
+              <input
+                type="radio"
+                name="options"
+                id="option6"
+                autocomplete="off"
+              />
+
+              🇪🇺
+            </label> -->
+            <label class="btn btn-dark btn-sm">
+              <input
+                type="radio"
+                name="options"
+                id="option4"
+                autocomplete="off"
+                onchange="fetchAndDrawUSMap();"
+              />
+
+              🇺🇸
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <br />
+
+      <div id="interactives">
+        <div class="span11" style="overflow-x: auto; overflow-y: hidden">
+          <div class="row-fluid" id="countries.miniChart"></div>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-lg-12" id="lightTwitter">
+            <div
+              class="btn-group btn-group-toggle float-right"
+              data-toggle="buttons"
+            >
+              <label class="btn btn-light btn-sm active">
+                <input
+                  type="radio"
+                  name="options"
+                  id="option7"
+                  autocomplete="off"
+                  onchange="fetchAndUpdateCountriesMiniChart(null, true);"
+                  checked
+                />
+
+                Daily 📊
+              </label>
+              <label class="btn btn-light btn-sm">
+                <input
+                  type="radio"
+                  name="options"
+                  id="cumulative.toggle.light"
+                  autocomplete="off"
+                  onchange="fetchAndUpdateCountriesMiniChart(null, false);"
+                />
+
+                Cumulative 📈
+              </label>
+            </div>
+          </div>
+          <div class="col-lg-12" id="darkTwitter">
+            <div
+              class="btn-group btn-group-toggle float-right"
+              data-toggle="buttons"
+            >
+              <label class="btn btn-dark btn-sm active">
+                <input
+                  type="radio"
+                  name="options"
+                  id="option9"
+                  autocomplete="off"
+                  onchange="fetchAndUpdateCountriesMiniChart(null, true);"
+                  checked
+                />
+
+                Daily 📊
+              </label>
+              <label class="btn btn-dark btn-sm">
+                <input
+                  type="radio"
+                  name="options"
+                  id="cumulative.toggle"
+                  autocomplete="off"
+                  onchange="fetchAndUpdateCountriesMiniChart(null, false);"
+                />
+
+                Cumulative 📈
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+
+      <div class="update_cards">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm">
+              <h6>Countries with largest increase in cases</h6>
+              <div class="span11">
+                <div class="row-fluid" id="snapshot.topSixNewCases"></div>
+              </div>
+              <br />
+            </div>
+            <div class="col-sm">
+              <h6>Countries with largest percentage increase in cases</h6>
+              <div class="span11">
+                <div
+                  class="row-fluid"
+                  id="snapshot.topSixNewCases.percentage"
+                ></div>
+              </div>
+              <br />
+            </div>
+            <div class="col-sm">
+              <h6>
+                Countries with largest increase in cases per 1M. population
+              </h6>
+              <div class="span11">
+                <div
+                  class="row-fluid"
+                  id="snapshot.topSixNewCases.perMillion"
+                ></div>
+              </div>
+              <br />
+            </div>
+            <!-- <div class="col-sm">
+              <h6>🇸🇬🇲🇾🇮🇩🇭🇰🇮🇳</h6>
+              <div class="span11">
+                <div class="row-fluid" id="dataRow6"></div>
+              </div>
+              <br />
+            </div> -->
+          </div>
+        </div>
+
+        <!-- <div class="row">
+          <div class="col-lg-12" id="lightTwitter">
+            <div
+              class="btn-group btn-group-toggle float-right"
+              data-toggle="buttons"
+            >
+              <label class="btn btn-light btn-sm active">
+                <input
+                  type="radio"
+                  name="options"
+                  id="optionToday"
+                  autocomplete="off"
+                  checked
+                />
+
+                Now
+              </label>
+              <label class="btn btn-light btn-sm">
+                <input
+                  type="radio"
+                  name="options"
+                  id="optionYesterday"
+                  autocomplete="off"
+                />
+
+                Yesterday (GMT+0)
+              </label>
+            </div>
+          </div>
+          <div class="col-lg-12" id="darkTwitter">
+            <div
+              class="btn-group btn-group-toggle float-right"
+              data-toggle="buttons"
+            >
+              <label class="btn btn-dark btn-sm active">
+                <input
+                  type="radio"
+                  name="options"
+                  id="optionTodayDark"
+                  autocomplete="off"
+                  checked
+                />
+
+                Now
+              </label>
+              <label class="btn btn-dark btn-sm">
+                <input
+                  type="radio"
+                  name="options"
+                  id="optionYesterdayDark"
+                  autocomplete="off"
+                />
+
+                Yesterday (GMT+0)
+              </label>
+            </div>
+          </div>
+        </div> -->
+
+        <br />
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-text">
+              The map is colored by cases per 1M population of each countries,
+              reset at every midnight GMT. Data retrieved from JHU and worldometers.info via disease.sh.
+            </h5>
+            <h5 class="card-text">Best,</h5>
+            <h5 class="card-text">Ken</h5>
+            <h5 class="card-text text-right">
+              <a href="https://www.linkedin.com/in/ken-chung-a71aa71a0/">
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+              <a href="https://twitter.com/kenchungl">
+                <i class="fab fa-twitter"></i>
+              </a>
+            </h5>
+          </div>
+        </div>
+
+        <br />
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <div
+            class="statistics"
+            id="statistic-section"
+            style="overflow-y: hidden"
+          >
+            <div id="country_data">
+              <h2 id="infection_table_title">Countries / Regions Affected</h2>
+              <h5 class="text-left">
+                Tap the country name to see the historic chart 📈
+              </h5>
+              <h5 class="text-left">
+                All data is reset at GMT+0 midnight.
+              </h5>
+              <!-- <h5 class="text-left">
+                This data is also available in
+
+                <a href="javascript:void(0);" onClick="downloadCSV();">
+                  CSV
+
+                  <i class="fas fa-file-excel"></i>
+                </a>
+
+                , or
+
+                <a href="javascript:void(0);" onClick="downloadJSON();">
+                  JSON
+
+                  <i class="fab fa-js-square"></i>
+                </a>
+              </h5> -->
+              <div class="table-responsive-sm">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="text-center">
+                        <h4>
+                          <a
+                            href="javascript:void(0);"
+                            onClick="drawDetailedTable(allCountriesSnapshotCache,'country');"
+                            >Name</a
+                          >
+                        </h4>
+                      </th>
+                      <th scope="col" class="text-center">
+                        <h4>
+                          <a
+                            href="javascript:void(0);"
+                            onClick="drawDetailedTable(allCountriesSnapshotCache,'cases');"
+                            >Cases</a
+                          >
+                        </h4>
+                      </th>
+                      <th scope="col" class="text-center">
+                        <h4>
+                          <a
+                            href="javascript:void(0);"
+                            onClick="drawDetailedTable(allCountriesSnapshotCache,'deaths');"
+                            >Deaths</a
+                          >
+                        </h4>
+                      </th>
+                      <th scope="col" class="text-center">
+                        <h4>
+                          <a
+                            href="javascript:void(0);"
+                            onClick="drawDetailedTable(allCountriesSnapshotCache,'todayCases');"
+                            >New Cases</a
+                          >
+                        </h4>
+                      </th>
+                      <th scope="col" class="text-center">
+                        <h4>
+                          <a
+                            href="javascript:void(0);"
+                            onClick="drawDetailedTable(allCountriesSnapshotCache,'todayDeaths');"
+                            >New Deaths</a
+                          >
+                        </h4>
+                      </th>
+                      <th scope="col" class="text-center">
+                        <h4><a href="javascript:void(0);" onClick="drawDetailedTable(allCountriesSnapshotCache,'todayDeaths');">Active Cases</a></h4>
+                      </th>
+                      <th scope="col" class="text-center">
+                        <h4>
+                          <a
+                            href="javascript:void(0);"
+                            onClick="drawDetailedTable(allCountriesSnapshotCache,'recovered');"
+                            >Recovered</a
+                          >
+                        </h4>
+                      </th>
+                      <th scope="col" class="text-center">
+                        <h4>
+                          <a
+                            href="javascript:void(0);"
+                            onClick="drawDetailedTable(allCountriesSnapshotCache,'casesPerOneMillion');"
+                            >Cases per 1M</a
+                          >
+                        </h4>
+                      </th>
+                      <th scope="col" class="text-center">
+                        <h4>
+                          <a
+                            href="javascript:void(0);"
+                            onClick="drawDetailedTable(allCountriesSnapshotCache,'deathsPerOneMillion');"
+                            >Deaths per 1M</a
+                          >
+                        </h4>
+                      </th>
+                      <th scope="col" class="text-center">
+                        <h4>
+                          <a
+                            href="javascript:void(0);"
+                            onClick="drawDetailedTable(allCountriesSnapshotCache,'testsPerOneMillion');"
+                            >Tests per 1M</a
+                          >
+                        </h4>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody id="country_data_rows"></tbody>
+                </table>
+              </div>
+              <div
+                class="modal fade"
+                id="exampleModal"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-body" id="modal.body">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h5 class="text-center" style="color: gray">
+            Data retrieved from JHU and worldometers.info via disease.sh
+          </h5>
+
+          <h5 class="text-center" style="color: gray">
+            <a href="https://www.twitter.com/thebaselab">
+              Twitter
+            </a>
+
+            |
+
+            <a href="https://thebaselab.com/privacypolicies">Privacy Policy</a>
+
+            |
+
+            support@thebaselab.com
+          </h5>
+        </div>
+      </div>
+    </div>
+
+    <script
+      type="text/javascript"
+      src="https://www.gstatic.com/charts/loader.js"
+    ></script>
+    <script type="text/javascript">
+      google.charts.load("current", {
+        packages: ["geochart", "line", "bar"],
+        // Note: you will need to get a mapsApiKey for your project.
+        // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
+        mapsApiKey: "AIzaSyBFguQZRU_S1rRzAGOMEXSWT2prXFEtfGg",
+      });
+
+      google.setOnLoadCallback(main);
+
+      $("#exampleModal").on("hidden.bs.modal", function () {
+        $("#modelBody").empty();
+      });
+    </script>
+  </body>
+</html>
