@@ -188,7 +188,11 @@ function showDetailedModal(country){
     document.getElementById('modal.body').innerHTML = '';
     $("#exampleModal").modal('toggle');
     $("#exampleModal").one("shown.bs.modal", function () {
-        fetch(`${apiEntry}/historical/${country}?lastdays=all`)
+        var countryURL = country;
+        if(country === 'HK'){
+            countryURL = 'CN/Hong%20Kong';
+        }
+        fetch(`${apiEntry}/historical/${countryURL}?lastdays=all`)
         .then(response => response.json())
         .then(data => {
             var charts = ['detailed.chart.cases', 'detailed.chart.deaths'];
@@ -198,8 +202,12 @@ function showDetailedModal(country){
                 element.id = chart;
                 document.getElementById('modal.body').appendChild(element);
             }
-            drawChart(charts[0], data.timeline.cases, true, `Daily Cases - ${data.country} ${getFlagEmoji(country)}`);
-            drawChart(charts[1], data.timeline.deaths, true, `Daily Deaths - ${data.country} ${getFlagEmoji(country)}`);
+            var countryToDisplay = data.country;
+            if(country === `HK`){
+                countryToDisplay = 'Hong Kong'
+            }
+            drawChart(charts[0], data.timeline.cases, true, `Daily Cases - ${countryToDisplay} ${getFlagEmoji(country)}`);
+            drawChart(charts[1], data.timeline.deaths, true, `Daily Deaths - ${countryToDisplay} ${getFlagEmoji(country)}`);
         })
         .catch(err => {
             var element = document.createElement('h5');
