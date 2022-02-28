@@ -2,6 +2,7 @@ var topSixCountriesHistoricCache = null;
 var allCountriesSnapshotCache = null;
 var mapDataCache = null;
 var USStatesCache = null;
+var summarisedDataCache = null;
 var isShowingStatesMap = false;
 var apiEntry = 'https://disease.sh/v3/covid-19';
 var fetchPeriod = '90'
@@ -43,6 +44,7 @@ function fetchAndUpdateSummarisedData(){
     fetch(`${apiEntry}/all?yesterday=true`)
         .then(response => response.json())
         .then(data => {
+            summarisedDataCache = data;
             document.getElementById("summarised.cases").innerText = numberInMillions(data.cases);
             document.getElementById("summarised.deaths").innerText = numberInMillions(data.deaths);
             document.getElementById("summarised.recovered").innerText = numberInMillions(data.recovered);
@@ -50,7 +52,6 @@ function fetchAndUpdateSummarisedData(){
             document.getElementById("summarised.todayDeaths").innerHTML = 'Deaths <span style="color: #d9453d;">+' + numberWithCommas(data.todayDeaths) + '</span>';
             document.getElementById("summarised.todayRecovered").innerHTML = 'Recovered <span style="">+' + numberWithCommas(data.todayRecovered) + '</span>';
             document.getElementById("last.updated").innerText = new Date(data.updated).toLocaleString();
-            
         });    
 }
 
@@ -358,15 +359,28 @@ function fetchAndUpdateCountriesMiniChart(snapshot, isDelta){
         return;
     }
     var countriesISOs = snapshot.map(x => x.iso2).join('%2C');
-    fetch(`${apiEntry}/historical/${countriesISOs}?lastdays=${fetchPeriod}`)
-        .then(response => response.json())
-        .then(data => {
-            for(x in data){
-                snapshot[x].timeline = data[x].timeline;
-            }
-            topSixCountriesHistoricCache = snapshot;
-            drawMiniChart(snapshot, isDelta);
-        })
+    Promise.all([
+        fetch(`${apiEntry}/historical/${countriesISOs}?lastdays=${fetchPeriod}`)
+            .then((res) => res.json()),
+        fetch(`${apiEntry}/historical/all?lastdays=${fetchPeriod}`)
+            .then((res) => res.json())
+    ]).then(([countries, all]) => {
+        for(x in countries){
+            snapshot[x].timeline = countries[x].timeline;
+        }
+        var worldSnapshot = {
+            country: 'World',
+            countryCode: null,
+            timeline: all,
+            iso2: null,
+            todayCases: summarisedDataCache.todayCases,
+            todayDeaths: summarisedDataCache.todayDeaths
+        }
+        snapshot.unshift(worldSnapshot)
+
+        drawMiniChart(snapshot, isDelta);
+        topSixCountriesHistoricCache = snapshot;
+    })
 }
 
 function numberWithCommas(number){
@@ -379,6 +393,9 @@ function numberInMillions(number){
 
 // From: https://dev.to/jorik/country-code-to-flag-emoji-a21
 function getFlagEmoji(countryCode) {
+    if(countryCode === null){
+        return "🌐";
+    }
     const codePoints = countryCode
         .toUpperCase()
         .split('')
