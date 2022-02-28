@@ -4,6 +4,7 @@ var mapDataCache = null;
 var USStatesCache = null;
 var isShowingStatesMap = false;
 var apiEntry = 'https://disease.sh/v3/covid-19';
+var fetchPeriod = '90'
 
 // This function is called after Google Charts successfully loaded.
 function main(){
@@ -21,6 +22,12 @@ function main(){
             doit = setTimeout(resizedw, 100);
         }
     }
+}
+
+function updateFetchPeriod(period){
+    fetchPeriod = period;
+    topSixCountriesHistoricCache = null;
+    fetchAndUpdateCountriesSnapshot();
 }
 
 function resizedw(){
@@ -192,7 +199,7 @@ function showDetailedModal(country){
         if(country === 'HK'){
             countryURL = 'CN/Hong%20Kong';
         }
-        fetch(`${apiEntry}/historical/${countryURL}?lastdays=all`)
+        fetch(`${apiEntry}/historical/${countryURL}?lastdays=${fetchPeriod}`)
         .then(response => response.json())
         .then(data => {
             var charts = ['detailed.chart.cases', 'detailed.chart.deaths'];
@@ -350,7 +357,7 @@ function fetchAndUpdateCountriesMiniChart(snapshot, isDelta){
         return;
     }
     var countriesISOs = snapshot.map(x => x.iso2).join('%2C');
-    fetch(`${apiEntry}/historical/${countriesISOs}?lastdays=all`)
+    fetch(`${apiEntry}/historical/${countriesISOs}?lastdays=${fetchPeriod}`)
         .then(response => response.json())
         .then(data => {
             for(x in data){

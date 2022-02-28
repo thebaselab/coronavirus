@@ -220,6 +220,56 @@
         <div class="row">
           <div class="col-lg-12" id="lightTwitter">
             <div
+              class="btn-group btn-group-toggle float-left"
+              data-toggle="buttons"
+            >
+              <label class="btn btn-light btn-sm">
+                <input
+                  type="radio"
+                  name="options"
+                  id="option9"
+                  autocomplete="off"
+                  onchange="updateFetchPeriod('30')"
+                />
+
+                30
+              </label>
+              <label class="btn btn-light btn-sm active">
+                <input
+                  type="radio"
+                  name="options"
+                  id="cumulative.toggle"
+                  autocomplete="off"
+                  onchange="updateFetchPeriod('90')"
+                  checked
+                />
+
+                90
+              </label>
+              <label class="btn btn-light btn-sm">
+                <input
+                  type="radio"
+                  name="options"
+                  id="cumulative.toggle"
+                  autocomplete="off"
+                  onchange="updateFetchPeriod('365')"
+                />
+
+                365
+              </label>
+              <label class="btn btn-light btn-sm">
+                <input
+                  type="radio"
+                  name="options"
+                  id="cumulative.toggle"
+                  autocomplete="off"
+                  onchange="updateFetchPeriod('all')"
+                />
+
+                All
+              </label>
+            </div>
+            <div
               class="btn-group btn-group-toggle float-right"
               data-toggle="buttons"
             >
@@ -249,6 +299,56 @@
             </div>
           </div>
           <div class="col-lg-12" id="darkTwitter">
+            <div
+              class="btn-group btn-group-toggle float-left"
+              data-toggle="buttons"
+            >
+              <label class="btn btn-dark btn-sm">
+                <input
+                  type="radio"
+                  name="options"
+                  id="option9"
+                  autocomplete="off"
+                  onchange="updateFetchPeriod('30')"
+                />
+
+                30
+              </label>
+              <label class="btn btn-dark btn-sm active">
+                <input
+                  type="radio"
+                  name="options"
+                  id="cumulative.toggle"
+                  autocomplete="off"
+                  onchange="updateFetchPeriod('90')"
+                  checked
+                />
+
+                90
+              </label>
+              <label class="btn btn-dark btn-sm">
+                <input
+                  type="radio"
+                  name="options"
+                  id="cumulative.toggle"
+                  autocomplete="off"
+                  onchange="updateFetchPeriod('365')"
+                />
+
+                365
+              </label>
+              <label class="btn btn-dark btn-sm">
+                <input
+                  type="radio"
+                  name="options"
+                  id="cumulative.toggle"
+                  autocomplete="off"
+                  onchange="updateFetchPeriod('all')"
+                />
+
+                All
+              </label>
+            </div>
             <div
               class="btn-group btn-group-toggle float-right"
               data-toggle="buttons"
