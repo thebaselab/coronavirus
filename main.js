@@ -260,6 +260,20 @@ function drawTickerTape(snapshot){
 
 function drawSanpshot(slicedSnapshot, element){
     for(country of slicedSnapshot){
+        var extraInfo = ""
+
+        switch (element.id){
+            case "snapshot.topSixNewCases.percentage":
+                extraInfo = " (" + country.increasePercentage + "%)</span>";
+                break;
+            case "snapshot.topSixNewCases.perMillion":
+                extraInfo = " (" + Math.round(country.increasePerOneMillion * 100) / 100 + ")</span>"
+                break;
+            case "snapshot.topSixNewCases":
+                extraInfo = ""
+                break;
+        }
+
         element.innerHTML += (
             '<div class="col-xs-6 mr-2" style="width: fit-content;"><h5><a href="javascript:void(0);" onClick="showDetailedModal(&quot;' + country.iso2 + '&quot;)">' +
               country.country +
@@ -269,9 +283,7 @@ function drawSanpshot(slicedSnapshot, element){
               numberWithCommas(country.cases) +
               ' <span style="color:#4c8bf1;"> +' +
               numberWithCommas(country.todayCases) +
-              " (" +
-              country.increasePercentage +
-              "%)</span>" +
+              extraInfo +
               "</a></h5></div>"
           );
     }
