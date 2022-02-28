@@ -274,6 +274,7 @@ function drawTickerTape(snapshot){
 }
 
 function drawSanpshot(slicedSnapshot, element){
+    element.innerHTML = "";
     for(country of slicedSnapshot){
         var extraInfo = ""
 
