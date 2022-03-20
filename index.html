@@ -10,21 +10,22 @@
     />
     <link
       rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      href="assets/bootstrap.min.css"
+      integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
+      crossorigin="anonymous"
     />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="mainTheme.css"
-    />
+    <link rel="stylesheet" type="text/css" href="assets/theme.css" />
     <script src="main.js?version=5"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      src="assets/jquery.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
       crossorigin="anonymous"
     ></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script
+      src="assets/bootstrap.bundle.min.js"
+      integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+      crossorigin="anonymous"
+    ></script>
     <link
       href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700&display=swap"
       rel="stylesheet"
@@ -56,6 +57,16 @@
         width: 270px;
       }
 
+      .icon {
+        width: 24px;
+        height: 24px;
+      }
+
+      .footnote {
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+
       @media (prefers-color-scheme: dark) {
         .darkTwitter {
           display: block;
@@ -80,16 +91,14 @@
           <h2>COVID-19</h2>
         </div>
         <div class="text-right">
-          <a
-            href="https://twitter.com/thebaselab?ref_src=twsrc%5Etfw"
-            class="twitter-follow-button"
-            data-show-count="false"
-          ></a>
-          <script
-            async
-            src="https://platform.twitter.com/widgets.js"
-            charset="utf-8"
-          ></script>
+          <h5>
+            <a href="https://twitter.com/thebaselab?ref_src=twsrc%5Etfw"
+              ><img
+                class="icon"
+                src="assets/twitter.svg"
+                alt="Follow us on Twitter"
+            /></a>
+          </h5>
         </div>
       </div>
       <div class="d-flex justify-content-between align-items-end topbar">
@@ -489,7 +498,8 @@
           <div class="card-body">
             <h5 class="card-text">
               The map is colored by cases per 1M population of each countries,
-              reset at every midnight GMT. Data retrieved from JHU and worldometers.info via disease.sh.
+              reset at every midnight GMT. Data retrieved from JHU and
+              worldometers.info via disease.sh.
             </h5>
             <h5 class="card-text">Best,</h5>
             <h5 class="card-text">Ken</h5>
@@ -519,9 +529,7 @@
               <h5 class="text-left">
                 Tap the country name to see the historic chart 📈
               </h5>
-              <h5 class="text-left">
-                All data is reset at GMT+0 midnight.
-              </h5>
+              <h5 class="text-left">All data is reset at GMT+0 midnight.</h5>
               <!-- <h5 class="text-left">
                 This data is also available in
 
@@ -589,7 +597,13 @@
                         </h4>
                       </th>
                       <th scope="col" class="text-center">
-                        <h4><a href="javascript:void(0);" onClick="drawDetailedTable(allCountriesSnapshotCache,'active');">Active Cases</a></h4>
+                        <h4>
+                          <a
+                            href="javascript:void(0);"
+                            onClick="drawDetailedTable(allCountriesSnapshotCache,'active');"
+                            >Active Cases</a
+                          >
+                        </h4>
                       </th>
                       <th scope="col" class="text-center">
                         <h4>
@@ -642,31 +656,30 @@
               >
                 <div class="modal-dialog modal-lg" role="document">
                   <div class="modal-content">
-                    <div class="modal-body" id="modal.body">
-                    </div>
+                    <div class="modal-body" id="modal.body"></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <h5 class="text-center" style="color: gray">
-            Data retrieved from JHU and worldometers.info via disease.sh
-          </h5>
+          <div class="footnote">
+            <h5 class="text-center" style="color: gray">
+              Data retrieved from JHU and worldometers.info via disease.sh
+            </h5>
 
-          <h5 class="text-center" style="color: gray">
-            <a href="https://www.twitter.com/thebaselab">
-              Twitter
-            </a>
+            <h5 class="text-center" style="color: gray">
+              <a href="https://www.twitter.com/thebaselab"> Twitter </a>
 
-            |
+              |
 
-            <a href="https://thebaselab.com/privacypolicies">Privacy Policy</a>
+              <a href="https://thebaselab.com/privacypolicies"
+                >Privacy Policy</a
+              >
 
-            |
-
-            support@thebaselab.com
-          </h5>
+              | support@thebaselab.com
+            </h5>
+          </div>
         </div>
       </div>
     </div>
