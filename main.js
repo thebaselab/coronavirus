@@ -323,7 +323,7 @@ function fetchAndUpdateCountriesSnapshot(){
                 country: x.country,
                 cases: x.cases,
                 deaths: x.deaths,
-                iso2: x.countryInfo.iso2,
+                iso2: x.country === "DPRK" ? "KP" : x.countryInfo.iso2,
                 todayCases: x.todayCases,
                 todayDeaths: x.todayDeaths,
                 increasePerOneMillion: x.todayCases / (x.cases / x.casesPerOneMillion),
