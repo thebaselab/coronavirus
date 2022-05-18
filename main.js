@@ -310,6 +310,15 @@ function fetchAndUpdateCountriesSnapshot(){
     fetch(`${apiEntry}/countries?yesterday=true`)
         .then(response => response.json())
         .then(data => {
+            data = data.map(x => {return {
+                ...x,
+                countryInfo: {
+                    ...x.countryInfo,
+                    iso2: x.country === "DPRK" ? "KP" : x.countryInfo.iso2,
+                },
+            };}
+                
+            )
             var mapData = [['Country','Cases']];
             for(country of data){
                 mapData.push([{v: country.countryInfo.iso2, f: country.country}, {v: country.casesPerOneMillion, f: `${numberWithCommas(country.cases)} (+${numberWithCommas(country.todayCases)})`}])
@@ -323,7 +332,7 @@ function fetchAndUpdateCountriesSnapshot(){
                 country: x.country,
                 cases: x.cases,
                 deaths: x.deaths,
-                iso2: x.country === "DPRK" ? "KP" : x.countryInfo.iso2,
+                iso2: x.countryInfo.iso2,
                 todayCases: x.todayCases,
                 todayDeaths: x.todayDeaths,
                 increasePerOneMillion: x.todayCases / (x.cases / x.casesPerOneMillion),
